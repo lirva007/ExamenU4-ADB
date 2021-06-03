@@ -19,18 +19,23 @@ var txtUsuario = document.getElementById("usuario");
 var txtMensaje = document.getElementById("mensaje");
 var btnEnviar = document.getElementById("btnenviar");
 var chatlista = document.getElementById("chatlista");
+var fechahora = new Date();
+var fecha = fechahora.toString();
+fecha = fecha.substring(0,24);
+
 
 //Ejecutar accion en el boton
 btnEnviar.addEventListener("click",function(){
   var usuario = txtUsuario.value;
   var mensaje = txtMensaje.value;
-  var html = "<li>"+usuario+" dice: "+mensaje+"</li>";
+  var html = "<li>"+usuario+" dice: "+mensaje+""+fecha+"</li>";
 
   chatlista.innerHTML += html;
 
   firebase.database().ref('chat').push({
       user: usuario,
-      message: mensaje
+      message: mensaje,
+      datetime: fecha
   })
 });
 
@@ -42,7 +47,8 @@ firebase.database().ref('chat').on('value', (snapshot) => {
     var elemento = e.val();
     var usuario1 = elemento.user;
     var mensaje1 = elemento.message;
-    html1 += "<li>"+usuario1+" dice: "+mensaje1+"</li>";
+    var fecha1 = elemento.datetime;
+    html1 += "<li>"+usuario1+" dice: "+mensaje1+" "+fecha1+"</li>";
   });
   chatlista.innerHTML = html1;
 })
